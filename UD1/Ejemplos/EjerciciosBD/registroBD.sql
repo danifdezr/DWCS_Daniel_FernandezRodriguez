@@ -1,0 +1,11 @@
+
+CREATE DATABASE IF NOT EXISTS bd_registro;
+USE bd_registro;
+CREATE TABLE IF NOT EXISTS Usuarios(
+    nicUsuario CHAR(30) PRIMARY KEY,
+	nombre VARCHAR(60) NOT NULL,
+    apellido1 VARCHAR(100) NOT NULL,
+    apellido2 VARCHAR(100) NOT NULL,
+    correo VARCHAR(320) NOT NULL UNIQUE,
+    pwd VARCHAR(250) NOT NULL
+);
