@@ -2,22 +2,31 @@
 require_once "funciones.php";
 
 session_start();
+if(isset($_SESSION['loged'])){
+    header("Location: restringido.php");
+    exit;
+}
 
 $recordar = $_POST['check'] ?? null;
 $nic = $_POST['nic'] ?? null;
 $pass = $_POST['pass'] ?? null;
-if($nic!=null && $pass!=null){
-    if(comprobar_usuario($nic,$pass)){
-        $_SESSION['nombre']=$nic;
+if (isset($nic) && isset($pass) && !empty($nic) && !empty($pass)) {
+    if (comprobar_usuario($nic, $pass)) {
+        $_SESSION['loged'] = $nic;
+        //Impedir el acceso a la cookie de sesión por JavaScript.
+        $sesParams = session_get_cookie_params();
+        setcookie(session_name(),session_id(),$sesParams['lifetime'], $sesParams['path'], $sesParams['domain'], $sesParams['scure'], true);
+        $_SESSION['tiempo'] = time()+600;
         header("Location: restringido.php");
-    }else{
-        Echo "Usuario o contraseña incorrectos";
+    } else {
+        $error = "Login Incorrecto";
     }
 }
 
-if(isset($recordar)){
-    setcookie('recordar',$_SESSION['nombre'], time()+86400*30);
+if (isset($recordar)) {
+    setcookie('recordar', $_SESSION['nombre'], time() + 86400 * 30);
 }
+
 
 ?>
 
@@ -40,6 +49,11 @@ if(isset($recordar)){
             <button type="submit">Acceder</button>
         </form>
     </fieldset>
+    <?php 
+    if(isset($error)){
+        echo "<pre styles='color:red'>$error</pre>";
+    }
+    ?>
     <a href="registro.php">Registrar usuario</a>
     
 </body>

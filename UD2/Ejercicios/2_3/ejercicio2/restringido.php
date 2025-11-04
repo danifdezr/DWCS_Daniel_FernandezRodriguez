@@ -1,9 +1,16 @@
 <?php
 session_start();
-$nombre = $_SESSION['nombre'];
+
+$nombre = $_SESSION['loged'];
+$tiempo = $_SESSION['tiempo'];
+
+if($tiempo<=time()){
+    session_unset();
+    header("Location: inactividad.php");
+    exit;
+}
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -14,7 +21,7 @@ $nombre = $_SESSION['nombre'];
 </head>
 <body>
     <h1>Sección restringida</h1>
-    <?php if(isset($_SESSION['nombre'])): ?>
+    <?php if(isset($_SESSION['loged'])): ?>
     Estás logueado con el usuario <?= $nombre?>. Pulsa aquí para salir: <a href="logout.php">Logout</a>
     <p>
         Esta sección esta restringida solo para los usuarios que están registrados.
@@ -25,4 +32,5 @@ $nombre = $_SESSION['nombre'];
 <?php else: ?>
 <p>Acceso denegado</p>
 <a href="logout.php">Logout</a>
-<?php endif ?>
+<?php endif; 
+?>
