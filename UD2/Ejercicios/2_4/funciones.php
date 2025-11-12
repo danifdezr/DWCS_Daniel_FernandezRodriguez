@@ -24,8 +24,8 @@ function addUser(String $nombre, String $correo, String $pass, int $rol):bool{
 
     if(!isset($resultado["Mail"])){
         $query->closeCursor();
-    
-        $pass = sha1($pass);
+
+        $pass = password_hash($pass,PASSWORD_DEFAULT);
     
         $sql = "INSERT INTO usuarios( nombre, correo, pass, id_rol) VALUES (:nombre, :correo, :pass, :rol)";
         $query = $conexion->prepare($sql);
@@ -46,3 +46,34 @@ function addUser(String $nombre, String $correo, String $pass, int $rol):bool{
 
     return $toret; 
 }
+
+function errorCount($nombre, $correo, $rol, $pass, $repass){
+    $errores = "";
+
+    if(empty($nombre)){
+        $errores .= "El nombre es un campo obligatorio";
+    }
+    if(empty($correo)){
+        $errores .= "El correo es un campo obligatorio";
+        echo '<br>';
+    }
+    if(empty($rol)){
+        $errores .= "El rol es un campo obligatorio";
+        echo '<br>';
+    }
+    if(empty($pass)){
+        $errores .= "Contraseña no válida";
+        echo '<br>';
+    }
+    if($pass!=$repass){
+        $errores .= "Ambas contraseñas deben ser iguales";
+        echo '<br>';
+    }
+    if(!filter_var($correo,FILTER_VALIDATE_EMAIL)){
+        $errores .= "Email no válido";
+    }
+
+    return $errores;
+}
+
+

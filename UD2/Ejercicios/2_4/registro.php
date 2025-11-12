@@ -1,5 +1,23 @@
 <?php
 include_once "funciones.php";
+
+if($_SERVER['REQUEST_METHOD']=='POST'){
+    $nombre = $_POST['nombre'] ?? null;
+    $correo = $_POST['correo'] ?? null;
+    $rol = $_POST['rol'] ?? null;
+    $pass = $_POST['pass'] ?? null;
+    $repass = $_POST['repass'] ?? null;
+    
+    $errores = errorCount($nombre,$correo,$rol,$pass,$repass);
+    
+    if(!empty($errores)){
+        echo $errores;
+    }else{
+        addUser($nombre,$correo,$pass,$rol);
+        echo "Usuario creado";
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -30,17 +48,17 @@ include_once "funciones.php";
         <form>
             <div class="mb-3">
                 <label for="correo" class="form-label">Correo</label>
-                <input type="email" class="form-control" id="correo" placeholder="joedoe@mail.com">
+                <input type="email" class="form-control" id="correo" name="correo" placeholder="joedoe@mail.com">
             </div>
 
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" placeholder="Joe Doe">
+                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Joe Doe">
             </div>
 
             <div class="mb-3">
                 <label for="rol" class="form-label">Rol</label>
-                <select class="form-select" id="rol">
+                <select class="form-select" id="rol" name="rol">
                     <option selected>Jefe</option>
                     <option value="programador">Programador</option>
                     <option value="responsable">Responsable de Proyecto</option>
@@ -49,12 +67,12 @@ include_once "funciones.php";
 
             <div class="mb-3">
                 <label for="pass" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="pass" placeholder="************">
+                <input type="password" class="form-control" id="pass" name="pass" placeholder="************">
             </div>
 
             <div class="mb-4">
                 <label for="repass" class="form-label">Repita contraseña</label>
-                <input type="password" class="form-control" id="repass" placeholder="************">
+                <input type="password" class="form-control" id="repass" name="repass" placeholder="************">
             </div>
 
             <div class="d-grid">
