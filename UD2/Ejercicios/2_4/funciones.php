@@ -1,14 +1,17 @@
 <?php
-define("DB_DSN","mysql:host=maridb;dbname=gestion_proyectos");
-define("DB_USER", "root");
-define("DB_PASS","bitnami");
+require_once "clases.php";
+
+define('DB_DSN','mysql:host=mariadb;dbname=gestion_proyectos');
+define('DB_USER', 'root');
+define('DB_PASS','bitnami');
 
 function db_connection(){
     try {
         $db = new PDO(DB_DSN,DB_USER,DB_PASS);
     } catch (PDOException $ex1) {
-        die("Error");
+        die("Error".$ex1->getMessage());
     }
+    return $db;
 }
 
 function addUser(String $nombre, String $correo, String $pass, int $rol):bool{
@@ -22,58 +25,77 @@ function addUser(String $nombre, String $correo, String $pass, int $rol):bool{
 
     $toret = false;
 
-    if(!isset($resultado["Mail"])){
-        $query->closeCursor();
-
-        $pass = password_hash($pass,PASSWORD_DEFAULT);
-    
-        $sql = "INSERT INTO usuarios( nombre, correo, pass, id_rol) VALUES (:nombre, :correo, :pass, :rol)";
-        $query = $conexion->prepare($sql);
-        $query->bindParam('nombre', $nombre);
-        $query->bindParam('correo', $correo);
-        $query->bindParam('pass', $pass);
-        $query->bindParam('rol', $rol);
-
-        try {
-            $toret = $query->execute();
-        } catch (PDOException $ex2) {
-            $toret = false;
-        }finally{
-            $query = null;
-            $conexion = null;
-        }    
+    if(isset($resultado["Mail"]) && $resultado["Mail"]>0){
+        return 'El correo ya existe';
     }
+    $query->closeCursor();
+
+    $pass = password_hash($pass,PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO usuarios( nombre, correo, pass, id_rol) VALUES (:nombre, :correo, :pass, :rol)";
+    $query = $conexion->prepare($sql);
+    $query->bindValue('nombre', $nombre);
+    $query->bindValue('correo', $correo);
+    $query->bindValue('pass', $pass);
+    $query->bindValue('rol', $rol);
+
+    try {
+        $toret = $query->execute();
+    } catch (PDOException $ex2) {
+        $toret = false;
+        echo $ex2->getMessage();
+    }finally{
+        $query = null;
+        $conexion = null;
+    }    
 
     return $toret; 
 }
 
 function errorCount($nombre, $correo, $rol, $pass, $repass){
-    $errores = "";
+    $errores = [];
 
     if(empty($nombre)){
-        $errores .= "El nombre es un campo obligatorio";
+        $errores[] = "El nombre es un campo obligatorio";
     }
     if(empty($correo)){
-        $errores .= "El correo es un campo obligatorio";
-        echo '<br>';
+        $errores[] = "El correo es un campo obligatorio";
+    
     }
-    if(empty($rol)){
-        $errores .= "El rol es un campo obligatorio";
-        echo '<br>';
+    if(!isset($rol)){
+        $errores[] = "El rol es un campo obligatorio";
+    
     }
     if(empty($pass)){
-        $errores .= "Contraseña no válida";
-        echo '<br>';
+        $errores[] = "Contraseña no válida";
+    
     }
     if($pass!=$repass){
-        $errores .= "Ambas contraseñas deben ser iguales";
-        echo '<br>';
+        $errores[] = "Ambas contraseñas deben ser iguales";
+        
     }
     if(!filter_var($correo,FILTER_VALIDATE_EMAIL)){
-        $errores .= "Email no válido";
+        $errores[] = "Email no válido";
     }
 
     return $errores;
+}
+
+function getRoles(){
+    $sql = "SELECT * FROM roles";
+    $db = db_connection();
+    $stmt = $db->query($sql);
+    $roles = [];
+    foreach($stmt as $rol){
+        $r = new Rol;
+        $r->id = $rol["id"];
+        $r->nombre = $rol["nombre"];
+        $roles[] = $r;
+    }
+    $stmt->closeCursor();
+    $db = null;
+
+    return $roles;
 }
 
 

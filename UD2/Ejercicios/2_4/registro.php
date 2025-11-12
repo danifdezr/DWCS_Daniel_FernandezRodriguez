@@ -1,17 +1,22 @@
 <?php
 include_once "funciones.php";
 
+$roles = getRoles();
+
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $nombre = $_POST['nombre'] ?? null;
     $correo = $_POST['correo'] ?? null;
-    $rol = $_POST['rol'] ?? null;
+    $rol = intval($_POST['rol']) ?? null;
     $pass = $_POST['pass'] ?? null;
     $repass = $_POST['repass'] ?? null;
     
     $errores = errorCount($nombre,$correo,$rol,$pass,$repass);
     
     if(!empty($errores)){
-        echo $errores;
+        foreach($errors as $err){
+            echo $err;
+            echo "<br>";
+        }
     }else{
         addUser($nombre,$correo,$pass,$rol);
         echo "Usuario creado";
@@ -45,7 +50,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 <body>
     <div class="container mt-5" style="max-width: 500px;">
         <h1 class="text-center mb-4">Registro</h1>
-        <form>
+        <form method="POST">
             <div class="mb-3">
                 <label for="correo" class="form-label">Correo</label>
                 <input type="email" class="form-control" id="correo" name="correo" placeholder="joedoe@mail.com">
@@ -58,11 +63,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
             <div class="mb-3">
                 <label for="rol" class="form-label">Rol</label>
-                <select class="form-select" id="rol" name="rol">
-                    <option selected>Jefe</option>
-                    <option value="programador">Programador</option>
-                    <option value="responsable">Responsable de Proyecto</option>
-                </select>
+                <?php
+                echo '<select class="form-select" id="rol" name="rol">';
+                foreach($roles as $r){
+                    echo "<option value=$r->id>$r->nombre</option>";
+                }
+                echo '</select><br>';
+                ?>
             </div>
 
             <div class="mb-3">
