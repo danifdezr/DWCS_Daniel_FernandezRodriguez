@@ -19,7 +19,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         }
     }else{
         addUser($nombre,$correo,$pass,$rol);
-        echo "Usuario creado";
+        header("Location: usuarioCreado.php");
+        exit;
     }
 }
 
@@ -82,8 +83,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 <input type="password" class="form-control" id="repass" name="repass" placeholder="************">
             </div>
 
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">Registrarse</button>
+                <a href="login.php" class="btn btn-primary">Login</a>
             </div>
         </form>
     </div>

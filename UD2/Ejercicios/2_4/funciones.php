@@ -95,7 +95,19 @@ function getRoles(){
     $stmt->closeCursor();
     $db = null;
 
-    return $roles;
+        return $roles;
+}
+
+function validarUsuario($correo, $pass){
+
+    $pass = password_hash($pass,PASSWORD_DEFAULT);
+
+    $sql = 'SELECT COUNT(*) as Mail FROM usuarios WHERE correo=? AND pass=?';
+    $db  = db_connection();
+        $query = $db->prepare($sql);
+    $query->bindValue(1,$correo,PDO::PARAM_STR);
+    $query->bindValue(2,$pass,PDO::PARAM_STR);
+    
 }
 
 
