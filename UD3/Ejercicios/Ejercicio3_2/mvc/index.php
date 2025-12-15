@@ -10,8 +10,8 @@ require_once "globals.php";
  * requires (o includes) cada vez que necesitamos usar una clase.
  */
 
-spl_autoload_register(function ($clase){
-    $ruta = $_SERVER['DOCUMENT_ROOT'].'/'.str_replace('\\','/',$clase). '.php';
+spl_autoload_register(function($clase){
+    $ruta = $_SERVER['DOCUMENT_ROOT']. '/' . str_replace('\\', '/',$clase) . '.php';
     if(file_exists($ruta)){
         require_once $ruta;
     }else{
@@ -20,19 +20,18 @@ spl_autoload_register(function ($clase){
 });
 
 $controller = $_REQUEST['controller'] ?? "ErrorController";
-try{
-    $controller = "Ejercicios\\Ejercicio3_1\\mvc\\controller\\$controller";
-    $objeto = new $controller();
+try {
+    $controller = "Ejercicios\\Ejercicio3_2\\mvc\\controller\\$controller";
+    $objeto = new $controller;
     $action = $_REQUEST['action'] ?? 'pageNotFound';
-}catch(\Throwable $th){
+} catch (\Throwable $th) {
     $objeto = new Ejercicios\Ejercicio3_1\mvc\controller\ErrorController();
     $action = "pageNotFound";
-}
+} 
 
 try {
     $objeto->$action();
 } catch (\Throwable $th) {
-    $objeto = new Ejercicios\Ejercicio3_1\mvc\controller\ErrorController();
+    $objeto = new Ejercicios\Ejercicio3_2\mvc\controller\ErrorController();
     $objeto->pageNotFound();
 }
-

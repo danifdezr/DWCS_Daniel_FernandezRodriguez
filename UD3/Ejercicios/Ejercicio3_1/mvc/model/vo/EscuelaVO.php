@@ -2,7 +2,7 @@
 
 namespace Ejercicios\Ejercicio3_1\mvc\model\vo;
 
-class Escuela{
+class EscuelaVO{
 
     public $cod_escuela;
     public $nombre;
