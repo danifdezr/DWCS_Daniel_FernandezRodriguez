@@ -1,7 +1,7 @@
 <?php
 
 namespace Ejercicios\Ejercicio3_2\mvc\controller;
-use Ejercicios\Ejercicio3_1\mvc\view\View;
+use Ejercicios\Ejercicio3_2\mvc\view\View;
 
 class Controller{
     protected View $vista;

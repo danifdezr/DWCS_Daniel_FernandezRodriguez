@@ -25,7 +25,7 @@ try {
     $objeto = new $controller;
     $action = $_REQUEST['action'] ?? 'pageNotFound';
 } catch (\Throwable $th) {
-    $objeto = new Ejercicios\Ejercicio3_1\mvc\controller\ErrorController();
+    $objeto = new Ejercicios\Ejercicio3_2\mvc\controller\ErrorController();
     $action = "pageNotFound";
 } 
 
