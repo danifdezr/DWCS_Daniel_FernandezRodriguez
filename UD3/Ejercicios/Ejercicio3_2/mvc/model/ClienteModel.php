@@ -56,7 +56,7 @@ class ClienteModel extends Model{
     }
 
     public static function addClient(ClienteVo $cliente){
-        $sql = "INSERT INTO `cliente`(nombre, apellidos, telefono, mail) VALUES (':nombre',':apellidos',':telefono',':mail')";
+        $sql = "INSERT INTO cliente(nombre, apellidos, telefono, mail) VALUES (:nombre,:apellidos,:telefono,:mail)";
         try {
             $db = self::getConnection();
             $stmt = $db->prepare($sql);

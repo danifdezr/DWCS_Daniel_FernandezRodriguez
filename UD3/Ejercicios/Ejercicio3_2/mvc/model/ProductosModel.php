@@ -56,6 +56,25 @@ class ProductosModel extends Model{
         return isset($productos) && $productos ? $productos : null;
     }
 
+    public static function addProduct(ProductosVo $producto){
+        $sql = "INSERT INTO producto(denominacion, descripcion, precio, cantidad) VALUES (:denominacion,:descripcion,:precio,:cantidad)";
+        try {
+            $db = self::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':denominacion', $producto->denominacion,PDO::PARAM_STR);
+            $stmt->bindValue(':descripcion', $producto->descripcion,PDO::PARAM_STR);
+            $stmt->bindValue(':precio', $producto->precio);
+            $stmt->bindValue(':cantidad', $producto->cantidad,PDO::PARAM_INT);
+            
+            $toret = $stmt->execute();
+        } catch (\Throwable $th) {
+            $toret = false;
+            $db = null;
+        }
+
+        return $toret;
+    }
+
     private static function rowToVo(array $row){
         return new ProductosVo(
             $row['denominacion'],
