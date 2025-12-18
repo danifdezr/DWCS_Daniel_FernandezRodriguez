@@ -10,7 +10,7 @@
     <nav>
         <ul>
             <li><a href="index.php?controller=ProductosController&&action=listarProductos">Listar Productos</a></li>
-            <li><a href="">Listar Clientes</a></li>
+            <li><a href="index.php?controller=ClienteController&&action=listarClientes">Listar Clientes</a></li>
             <li><a href="">Alta Producto</a></li>
             <li><a href="">Alta Cliente</a></li>
         </ul>

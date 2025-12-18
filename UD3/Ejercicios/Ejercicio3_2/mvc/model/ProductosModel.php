@@ -2,7 +2,7 @@
 
 namespace Ejercicios\Ejercicio3_2\mvc\model;
 
-use Ejercicios\Ejercicio3_2\mvc\model\Vo\ProductosVo;
+use Ejercicios\Ejercicio3_2\mvc\model\vo\ProductosVo;   
 use PDO;
 use PDOException;
 
@@ -26,24 +26,26 @@ class ProductosModel extends Model{
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         } catch (PDOException $th) {
-            //DUDA!!!!!!!!!!!
             error_log("Error". $th->getMessage());
         }finally{
             $db = null;
         }
 
-        //DUDA!!!!!!!!!!!
         return isset($row) && $row ? self::rowToVo($row) : null;
 
     }
 
     public static function getProduct(){
-        $sql = "SELECT * FROM producto";
-
+        $sql = "SELECT denominacion, descripcion, precio, cantidad FROM producto";
+        $productos = [];
         try {
             $db = self::getConnection();
             $stmt = $db->query($sql);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach($rows as $row){
+                $producto = self::rowToVo($row);
+                $productos[] = $producto;
+            }
 
         } catch (PDOException $th) {
             error_log("Error". $th->getMessage());
@@ -51,12 +53,11 @@ class ProductosModel extends Model{
             $db = null;
         }
 
-        return isset($row) && $row ? self::rowToVo($row) : null;
+        return isset($productos) && $productos ? $productos : null;
     }
 
     private static function rowToVo(array $row){
         return new ProductosVo(
-            (int) $row['cod_producto'],
             $row['denominacion'],
             $row['descripcion'],
             (float) $row['precio'],

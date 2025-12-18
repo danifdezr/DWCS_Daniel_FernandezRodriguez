@@ -1,5 +1,5 @@
 <?php
-$productos = $data['producto'] ?? [];
+$clientes = $data['clientes'] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -14,19 +14,19 @@ $productos = $data['producto'] ?? [];
     <table>
         <thead>
             <tr>
-                <th>Denominación</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Teléfono</th>
+                <th>Mail</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach($productos as $p): ?>
+            <?php foreach($clientes as $c): ?>
                 <tr>
-                    <td><?= htmlspecialchars($p->denominacion);?></td>
-                    <td><?= htmlspecialchars($p->descripcion);?></td>
-                    <td><?= $p->precio; ?> €</td>
-                    <td><?= $p->cantidad; ?></td>
+                    <td><?= htmlspecialchars($c->nombre);?></td>
+                    <td><?= htmlspecialchars($c->apellidos);?></td>
+                    <td><?= (int) $c->telefono; ?></td>
+                    <td><?= htmlspecialchars($c->mail); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
