@@ -1,9 +1,6 @@
-version: '2'
 services:
   php:
-    #image: bitnami/php-fpm:latest
-    #Cambiamos de la version 8.3 a la 8.2 para poder utilizar xdebug
-    image: bitnami/php-fpm:8.2.23
+    image: bitnami/php-fpm:latest
     ports:
       - 9000:9000
     volumes:
@@ -19,13 +16,13 @@ services:
     depends_on:
       - php
   mariadb:
-    image: docker.io/bitnami/mariadb:10.6
+    image: docker.io/bitnami/mariadb:latest
     environment:
       - MARIADB_ROOT_PASSWORD=bitnami
     volumes:
       - 'mariadb_data:/bitnami'
   phpmyadmin:
-    image: docker.io/bitnami/phpmyadmin:5
+    image: docker.io/bitnami/phpmyadmin:latest
     ports:
       - '8000:8080'
     depends_on:

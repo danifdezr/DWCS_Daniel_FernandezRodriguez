@@ -1,20 +1,37 @@
 <?php
-include_once('globals.php');
-include("controlador/enunciado-controller.php");
-if (isset($_REQUEST['controller'])) {
-    $controller = $_REQUEST['controller'];
-    try {
-        $objeto = new $controller();
-        $action="no definida";
-        if (isset($_REQUEST['action'])) {
-            $action = $_REQUEST['action'];
-        }
-        $objeto->$action();
-    } catch (\Throwable $th) {
-        error_log("Ruta inexistente: controller=" . $controller."&action=$action");
-        header("location:/");
+
+require_once "globals.php";
+
+//Autoload
+/**
+ * Esta funcion registra un callback que PHP llamara cada vez que encuentre una clase que aun no esta cargada.
+ * Ese callback se encarga de buscar el archivo correcto y hacer el require.
+ * De este modo podemos indicar simplemente los namespaces que estamos usando (parecido a Java) y evitar porner
+ * requires (o includes) cada vez que necesitamos usar una clase.
+ */
+
+spl_autoload_register(function($clase){
+    $ruta = $_SERVER['DOCUMENT_ROOT']. '/' . str_replace('\\', '/',$clase) . '.php';
+    if(file_exists($ruta)){
+        require_once $ruta;
+    }else{
+        error_log("No se encuentra la clase : $ruta");
     }
-} else {
-    $objeto = new EnunciadoController();
-    $objeto->showEnunciado();
+});
+
+$controller = $_REQUEST['controlador'] ?? "ErrorController";
+try {
+    $controller = "controlador\\$controller";
+    $objeto = new $controller;
+    $action = $_REQUEST['action'] ?? 'pageNotFound';
+} catch (\Throwable $th) {
+    $objeto = new controlador\ErrorController();
+    $action = "pageNotFound";
+} 
+
+try {
+    $objeto->$action();
+} catch (\Throwable $th) {
+    $objeto = new controlador\ErrorController();
+    $objeto->pageNotFound();
 }
