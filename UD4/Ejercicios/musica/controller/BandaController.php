@@ -18,11 +18,35 @@ class BandaController{
         Response::json($json, 200);
     }
 
+    public function show(int $id){
+        $banda = BandaModel::getById($id);
+        if(!isset($banda)){
+            Response::notFound();
+            return;
+        }
+        Response::json($banda->toArray(),200);
+    }
+
     public function store(){
         $request = new Request();
         $banda = BandaVo::fromArray($request->body());
         $banda = BandaModel::addBanda($banda);
         Response::json($banda->toArray(),201);
+    }
+
+    public function update(int $id){
+        $request = new Request();
+        $banda = BandaModel::getById($id);
+        if(!isset($banda)){
+            Response::notFound();
+            return;
+        }
+
+        $banda->updateVoParams(BandaVo::fromArray($request->body()));
+
+        $banda->setId($id);
+        $banda = BandaModel::update($banda);
+        Response::json($banda->toArray(),200);
     }
 
     public function destroy(int $id){
