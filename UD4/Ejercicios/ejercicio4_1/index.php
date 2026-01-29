@@ -1,12 +1,7 @@
 <?php
-
 require_once "globals.php";
-
-use Ejercicios\musica\core\Request;
-use Ejercicios\musica\core\Router;
-
-//Cargamos configuración
-$env = parse_ini_file('.env');
+use Ejercicios\ejercicio4_1\core\Request;
+use Ejercicios\ejercicio4_1\core\Router;
 
 spl_autoload_register(function ($clase) {
 

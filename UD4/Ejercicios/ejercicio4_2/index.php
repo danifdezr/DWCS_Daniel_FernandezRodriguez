@@ -1,13 +1,11 @@
 <?php
+use Ejercicios\ejercicio4_2\core\Request;
+use Ejercicios\ejercicio4_2\core\Router;
 
-require_once "globals.php";
+//Cargamos configuracion
+$_ENV = parse_ini_file(__DIR__.'/config/.env');
 
-use Ejercicios\musica\core\Request;
-use Ejercicios\musica\core\Router;
-
-//Cargamos configuración
-$env = parse_ini_file('.env');
-
+//Autoload
 spl_autoload_register(function ($clase) {
 
     $ruta = $_SERVER['DOCUMENT_ROOT'] . '/' . str_replace('\\', '/', $clase) . '.php';
@@ -17,6 +15,7 @@ spl_autoload_register(function ($clase) {
         error_log("No se encuentra la clase : $ruta");
     }
 });
+
 
 $request = new Request();
 $router = new Router();

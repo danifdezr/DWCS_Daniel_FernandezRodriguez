@@ -20,12 +20,16 @@ class DiscoController{
     }
 
     public function show($id_banda){
-        $disco = DiscoModel::getByIdBanda($id_banda);
-        if(!isset($disco)){
+        $discos = DiscoModel::getByIdBanda($id_banda);
+        if(!isset($discos)){
             Response::notFound();
             return;
         }
-        Response::json($disco->toArray(),200);
+        $discosJson = [];
+        foreach($discos as $d){
+            $discosJson[] = $d->toArray();
+        }
+        Response::json($discosJson,200);
     }
 
     public function showDisco($id){
@@ -42,6 +46,21 @@ class DiscoController{
         $disco = DiscoVo::fromArray($request->body());
         $disco = DiscoModel::addDisco($disco);
         Response::json($disco->toArray(),201);
+    }
+
+    public function update(int $id){
+        $request = new Request();
+        $disco = DiscoModel::getById($id);
+        if(!isset($disco)){
+            Response::notFound();
+            return;
+        }
+
+        $disco->updateVoParams(vo: DiscoVo::fromArray($request->body()));
+
+        $disco->setId($id);
+        $banda = DiscoModel::update($disco);
+        Response::json($disco->toArray(),200);
     }
 
 }

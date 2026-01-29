@@ -5,17 +5,24 @@ use Ejercicios\musica\core\Request;
 use Ejercicios\musica\model\BandaModel;
 use Ejercicios\musica\model\vo\BandaVo;
 use Ejercicios\musica\core\Response;
+use Exception;
 
 class BandaController{
 
-    public function index(){
-        $bandas = BandaModel::getBandas();
-        $json = [];
-        foreach($bandas as $banda){
-            $json[] = $banda->toArray();
-        }
+    public function index()
+    {
+        try {
+            $bandas = BandaModel::getBandas();
+            $json = [];
+            foreach ($bandas as $banda) {
+                $json[] = $banda->toArray();
+            }
 
-        Response::json($json, 200);
+            Response::json($json, 200);
+        } catch (\Throwable $th) {
+            error_log("BandaController->index() " . $th->getMessage());
+            Response::serverError();
+        }
     }
 
     public function show(int $id){
@@ -28,10 +35,19 @@ class BandaController{
     }
 
     public function store(){
-        $request = new Request();
-        $banda = BandaVo::fromArray($request->body());
-        $banda = BandaModel::addBanda($banda);
-        Response::json($banda->toArray(),201);
+        try {
+            $request = new Request();
+            $data = $request->body();
+            $banda = BandaVo::fromArray($data);
+            $banda = BandaModel::addBanda($banda);
+            if($banda === null){
+                throw new Exception("No se ha agregado la banda ".implode(',',$data));
+            }
+            Response::json($banda->toArray(),201);
+        } catch (\Throwable $th) {
+            error_log("BandaController->store() " . $th->getMessage());
+            Response::serverError();
+        }
     }
 
     public function update(int $id){

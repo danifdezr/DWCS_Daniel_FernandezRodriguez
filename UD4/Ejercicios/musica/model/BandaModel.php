@@ -46,6 +46,7 @@ class BandaModel extends Model{
         return $bandas;
     }
 
+    // Devolver BandaVo
     public static function addBanda(BandaVo $banda){
         $sql = "INSERT INTO banda (nombre, num_integrantes, genero, nacionalidad) VALUES (:nombre,:num_integrantes,:genero,:nacionalidad)";
         try {
