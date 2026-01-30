@@ -11,8 +11,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 class JwtMiddleware implements Middleware{
-
-    public function handle(Request $request){
+    public function handle(Request &$request){
         $token = $request->getHeader('Authorization');
 
         if(!isset($token)){

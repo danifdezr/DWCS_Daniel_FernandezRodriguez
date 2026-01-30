@@ -12,4 +12,5 @@ use Exception;
 
 class SensorController extends Controller{
     
+    
 }
