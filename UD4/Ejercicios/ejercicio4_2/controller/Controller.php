@@ -10,4 +10,8 @@ class Controller{
     public function __construct(){
         $this->request = new Request();
     }
+
+    public function __constructRequest(Request &$request){
+        $this->request = $request;
+    }
 }
