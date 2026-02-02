@@ -26,13 +26,13 @@ class AuthController extends Controller{
         Response::json(['token' => $token], 200);
     }
 
-
     private function createJwt(UsuarioVo $vo, $expireSeconds){
         $payload = [
             "sub" => $vo->getId(),
             "email" => $vo->getEmail(),
             "iat" => time(),
-            "exp" => time() + $expireSeconds
+            "exp" => time() + $expireSeconds,
+            "role" => "user"
         ];
 
         $jwt = JWT::encode($payload, $_ENV['JWT_SECRET_KEY'], $_ENV['JWT_ALGO']);

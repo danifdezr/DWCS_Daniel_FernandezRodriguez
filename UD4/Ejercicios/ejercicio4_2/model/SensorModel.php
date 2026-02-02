@@ -42,6 +42,31 @@ class SensorModel extends Model
         return $result;
     }
 
+    public static function getByCasaId(int $casaId): array
+    {
+    $sql = 'SELECT mac, localizacion, casa_id FROM sensor WHERE casa_id = :casa_id';
+    $db = null;
+    $result = [];
+
+    try {
+        $db = self::getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':casa_id', $casaId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+            $result[] = SensorVo::fromArray($row);
+        }
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+    } finally {
+        $db = null;
+    }
+
+    return $result;
+    }
+
     /**
      * Inserta un nuevo sensor en la base de datos.
      *
